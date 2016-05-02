@@ -14,6 +14,12 @@ Install via npm:
 npm install ng-bulk-check
 ```
 
+Install via bower: 
+
+```
+bower install ng-bulk-check
+```
+
 ## Version History
 
 ### 0.1.0
