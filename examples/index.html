@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ngBulkCheck component examples</title>
+  <link rel="stylesheet" href="examples.css">
+</head>
+<body ng-app="ngBulkCheckTest">
+<h1>ngC3Export examples</h1>
+
+<div ng-controller="TestController">
+  <div bulk-table actions="actions" data="items">
+    <table class="table table-striped table-hover dataTable">
+      <thead>
+      <tr>
+        <th class="text-center" bulk-table-global-checkbox width="1%"></th>
+        <th width="150">Test</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="item in items">
+        <td align="center"><label><input icheck type="checkbox" ng-model="item.selected"/></label></td>
+        <td align="center">
+          {{ item.name }}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 ng-if="selectedItemsStr != ''">{{ 'Selected items:' + selectedItemsStr }}</h3>
+</div>
+
+<script src="../bower_components/angular/angular.js"></script>
+<script src="../dist/ng-bulk-check.js"></script>
+<script src="examples.js"></script>
+</body>
+</html>

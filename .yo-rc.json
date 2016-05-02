@@ -1,0 +1,30 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Tomka Anna",
+        "email": "tomkaanna@gmail.com"
+      },
+      "libraryName": {
+        "original": "ng-bulk-check",
+        "camelized": "ngBulkCheck",
+        "dasherized": "ng-bulk-check",
+        "slugified": "ng-bulk-check",
+        "parts": [
+          "ng",
+          "bulk",
+          "check"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": true,
+      "includeModuleServices": true,
+      "includeAngularModuleResource": true,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "librarySrcDirectory": "src/ng-bulk-check",
+      "libraryUnitTestDirectory": "test/unit/ng-bulk-check",
+      "libraryUnitE2eDirectory": "test/e2e/ng-bulk-check"
+    }
+  }
+}
