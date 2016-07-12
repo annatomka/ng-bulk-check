@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="examples.css">
 </head>
 <body ng-app="ngBulkCheckTest">
-<h1>ngC3Export examples</h1>
+<h1>ngBulkCheck module examples</h1>
 
 <div ng-controller="TestController">
   <div bulk-table actions="actions" data="items">
@@ -28,6 +28,9 @@
     </table>
   </div>
   <h3 ng-if="selectedItemsStr != ''">{{ 'Selected items:' + selectedItemsStr }}</h3>
+  <button ng-click="enableAlertAction()">Enable Alert Action</button>
+  <button ng-click="disableAllAction()">Disable All Action</button>
+  <button ng-click="enableAllAction()">Enable All Action</button>
 </div>
 
 <script src="../bower_components/angular/angular.js"></script>

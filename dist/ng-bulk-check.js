@@ -24,7 +24,7 @@
 
 })(angular);
 
-angular.module("ngBulkCheck").run(["$templateCache", function($templateCache) {$templateCache.put("src/ng-bulk-check/bulk.table.component.directive.tpl.html","<div class=\"bulk-table-component\"><div class=\"bulk-table-form\"><form role=\"form\" class=\"form-inline\"><div class=\"form-group\"><select class=\"form-control\" name=\"action\" id=\"action\" ng-options=\"option as (option.id) for option in vm.actions\" ng-model=\"vm.selectedAction\"></select></div><button class=\"btn btn-info\" type=\"submit\" ng-click=\"vm.apply()\">Apply</button></form></div><div ng-transclude=\"\"></div></div>");
+angular.module("ngBulkCheck").run(["$templateCache", function($templateCache) {$templateCache.put("src/ng-bulk-check/bulk.table.component.directive.tpl.html","<div class=\"bulk-table-component\"><div class=\"bulk-table-form\"><form role=\"form\" class=\"form-inline\"><div class=\"form-group\"><select class=\"form-control\" name=\"action\" id=\"action\" ng-options=\"option as (option.id) for option in vm.enabledActions\" ng-model=\"vm.selectedAction\"></select></div><button class=\"btn btn-info\" type=\"submit\" ng-click=\"vm.apply()\" ng-disabled=\"!vm.selectedAction\">Apply</button></form></div><div ng-transclude=\"\"></div></div>");
 $templateCache.put("src/ng-bulk-check/bulk.table.global.checkbox.directive.tpl.html","<div><label><input icheck=\"\" type=\"checkbox\" ng-model=\"vm.globalSelection\"></label></div>");}]);
 (function () {
   'use strict';
@@ -50,13 +50,21 @@ $templateCache.put("src/ng-bulk-check/bulk.table.global.checkbox.directive.tpl.h
 
     return directive;
 
-    function bulkTableComponentController() {
+    function bulkTableComponentController($scope, $element) {
       var vm = this;
 
       vm.selectedAction = {};
 
-      if (vm.actions && vm.actions.length > 0) {
-        vm.selectedAction = vm.actions[0]
+      $scope.$watch(function () {
+        return vm.actions;
+      },function () {
+        vm.enabledActions = filterNotEnabledActions(vm.actions);
+      }, true);
+
+      vm.enabledActions = filterNotEnabledActions(vm.actions);
+
+      if (vm.enabledActions && vm.enabledActions.length > 0) {
+        vm.selectedAction = vm.enabledActions[0];
       }
 
       vm.apply = function () {
@@ -71,11 +79,13 @@ $templateCache.put("src/ng-bulk-check/bulk.table.global.checkbox.directive.tpl.h
               delete item.selected;
             });
           }
+
           if (selectedData && selectedData.length > 0 && angular.isDefined(vm.selectedAction.callback)) {
             vm.selectedAction.callback(selectedData);
           }
         }
-
+        
+        $scope.$broadcast('action:applied');
       };
 
       vm.selectAll = function () {
@@ -92,8 +102,51 @@ $templateCache.put("src/ng-bulk-check/bulk.table.global.checkbox.directive.tpl.h
         vm.data.forEach(function (item) {
           item.selected = false;
         });
+      };
+
+      function filterNotEnabledActions(actions) {
+        return actions.filter(function (action) {
+           return angular.isUndefined(action.enabled) || action.enabled;
+        });
       }
+
+
     }
+  }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('ngBulkCheck')
+    .controller("bulkTableGlobalCheckboxController", bulkTableGlobalCheckboxController);
+
+  /** @ngInject */
+
+
+  function bulkTableGlobalCheckboxController($element, $scope) {
+    var vm = this;
+
+    vm.globalSelection = false;
+    vm.bulkTableController = $element.controller('bulkTable');
+
+    $scope.$watch(function () {
+      return vm.globalSelection;
+    }, function (newValue, oldValue) {
+      if (newValue != oldValue) {
+        if (newValue) {
+          vm.bulkTableController.selectAll()
+        } else {
+          vm.bulkTableController.deselectAll()
+        }
+      }
+    });
+
+    $scope.$on('action:applied', function () {
+      vm.globalSelection = false;
+    });
   }
 
 })();
@@ -113,7 +166,7 @@ $templateCache.put("src/ng-bulk-check/bulk.table.global.checkbox.directive.tpl.h
       scope: {
 
       },
-      controller: bulkTableGlobalCheckboxController,
+      controller: 'bulkTableGlobalCheckboxController',
       controllerAs: 'vm',
       bindToController: true,
       link: function (scope, element, attrs, vm){
@@ -122,24 +175,5 @@ $templateCache.put("src/ng-bulk-check/bulk.table.global.checkbox.directive.tpl.h
     };
 
     return directive;
-
-    function bulkTableGlobalCheckboxController($element, $scope) {
-      var vm = this;
-
-      vm.globalSelection = false;
-      vm.bulkTableController = $element.controller('bulkTable');
-
-      $scope.$watch(function () {
-        return vm.globalSelection;
-      },function (newValue, oldValue) {
-        if(newValue != oldValue){
-          if(newValue){
-            vm.bulkTableController.selectAll()
-          }else{
-            vm.bulkTableController.deselectAll()
-          }
-        }
-      })
-    }
   }
 })();

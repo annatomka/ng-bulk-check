@@ -3,10 +3,11 @@
     <form role="form" class="form-inline">
       <div class="form-group">
         <select class="form-control" name="action" id="action"
-                ng-options="option as (option.id) for option in vm.actions"
-                ng-model="vm.selectedAction"></select>
+                ng-options="option as (option.id) for option in vm.enabledActions"
+                ng-model="vm.selectedAction">
+        </select>
       </div>
-      <button class="btn btn-info" type="submit" ng-click="vm.apply()">Apply</button>
+      <button class="btn btn-info" type="submit" ng-click="vm.apply()" ng-disabled="!vm.selectedAction">Apply</button>
     </form>
   </div>
 
