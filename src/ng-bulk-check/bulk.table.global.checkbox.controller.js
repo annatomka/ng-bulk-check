@@ -5,9 +5,6 @@
     .module('ngBulkCheck')
     .controller("bulkTableGlobalCheckboxController", bulkTableGlobalCheckboxController);
 
-  /** @ngInject */
-
-
   function bulkTableGlobalCheckboxController($element, $scope) {
     var vm = this;
 
@@ -31,4 +28,5 @@
     });
   }
 
+  bulkTableGlobalCheckboxController.$inject = ['$element', '$scope'];
 })();
